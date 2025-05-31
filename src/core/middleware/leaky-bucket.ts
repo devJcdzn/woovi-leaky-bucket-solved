@@ -1,8 +1,8 @@
 import { Middleware } from "koa";
 
 type Bucket = {
-  lastCheck: number;
   tokens: number;
+  lastRefill: number;
 };
 
 interface LeakyBucketConfig {
@@ -11,8 +11,8 @@ interface LeakyBucketConfig {
   keyGen?: (ctx: any) => string;
 }
 
-const CAPACITY = 10;
-const LEAK_RATE = 1;
+const MAX_TOKENS = 10;
+const REFILL_INTERVAL = 60 * 60 * 1000;
 
 const buckets = new Map<string, Bucket>();
 
@@ -20,23 +20,36 @@ export const leakyBucketMiddleware: Middleware = async (ctx, next) => {
   const user = ctx.state.user;
   const now = Date.now();
 
-  const bucket = buckets.get(user.id) || {
-    lastCheck: now,
-    tokens: 0,
-  };
+  let bucket = buckets.get(user.id);
 
-  const deltaTime = (now - bucket.lastCheck) / 1000;
-  const leakedTokens = deltaTime * LEAK_RATE;
+  if (!bucket) {
+    bucket = {
+      tokens: MAX_TOKENS,
+      lastRefill: now,
+    };
 
-  bucket.tokens = Math.max(0, bucket.tokens - leakedTokens);
-  bucket.lastCheck = now;
-
-  if (bucket.tokens < CAPACITY) {
-    bucket.tokens += 1;
     buckets.set(user.id, bucket);
-    return await next();
   }
 
-  ctx.status = 429;
-  ctx.body = { message: "TOO MANY REQUESTS" };
+  const hoursPassed = Math.floor((now - bucket.lastRefill) / REFILL_INTERVAL);
+
+  if (hoursPassed > 0) {
+    bucket.tokens = Math.min(MAX_TOKENS, bucket.tokens + hoursPassed);
+    bucket.lastRefill = now;
+  }
+
+  if (bucket.tokens < 0) {
+    ctx.status = 429;
+    ctx.body = {
+      message: "TOO MANY REQUESTS",
+    };
+  }
+
+  ctx.state._consumeToken = () => {
+    bucket.tokens = Math.max(0, bucket.tokens - 1);
+  };
+
+  await next();
+
+  if (ctx.status >= 400) ctx.state._consumeToken();
 };
