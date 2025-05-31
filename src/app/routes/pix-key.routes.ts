@@ -42,6 +42,13 @@ router.post("/pix-transaction", (ctx) => {
 
   const owner = users.find((user) => user.pixKey === pixKey);
 
+  if (!owner) {
+    ctx.status = 404;
+    return (ctx.body = {
+      message: "Pix Key not found.",
+    });
+  }
+
   ctx.status = 200;
   return (ctx.body = {
     message: "Transferência realizada!",
