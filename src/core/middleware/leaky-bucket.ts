@@ -38,7 +38,7 @@ export const leakyBucketMiddleware: Middleware = async (ctx, next) => {
     bucket.lastRefill = now;
   }
 
-  if (bucket.tokens < 0) {
+  if (bucket.tokens <= 0) {
     ctx.status = 429;
     ctx.body = {
       message: "TOO MANY REQUESTS",
@@ -52,4 +52,5 @@ export const leakyBucketMiddleware: Middleware = async (ctx, next) => {
   await next();
 
   if (ctx.status >= 400) ctx.state._consumeToken();
+  console.log({ bucket });
 };
