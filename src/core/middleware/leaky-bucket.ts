@@ -40,7 +40,7 @@ export const leakyBucketMiddleware: Middleware = async (ctx, next) => {
 
   if (bucket.tokens <= 0) {
     ctx.status = 429;
-    ctx.body = {
+    return ctx.body = {
       message: "TOO MANY REQUESTS",
     };
   }
