@@ -1,0 +1,34 @@
+{
+  "info": {
+    "name": "Woovi - Technical Test",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Query Pix Key",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer token-alice",
+            "type": "text"
+          },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"pixKey\": \"chave@exemplo.com\" }"
+        },
+        "url": {
+          "raw": "http://localhost:3000/query-pix-key",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["query-pix-key"]
+        }
+      },
+      "response": []
+    }
+  ]
+}
