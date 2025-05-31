@@ -28,4 +28,29 @@ router.post("/query-pix-key", (ctx) => {
   });
 });
 
+router.post("/pix-transaction", (ctx) => {
+  const { pixKey, amount } = ctx.request.body as {
+    pixKey: string;
+    amount: number;
+  };
+
+  if (!pixKey || pixKey.length < 5) {
+    ctx.status = 400;
+
+    return (ctx.body = { message: "Invalid Pix Key" });
+  }
+
+  const owner = users.find((user) => user.pixKey === pixKey);
+
+  ctx.status = 200;
+  return (ctx.body = {
+    message: "Transferência realizada!",
+    from: ctx.state.user.name,
+    to: {
+      name: owner?.name,
+      pixKey: owner?.pixKey,
+    },
+  });
+});
+
 export default router;
