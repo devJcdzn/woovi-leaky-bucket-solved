@@ -5,30 +5,69 @@
   },
   "item": [
     {
-      "name": "Query Pix Key",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer token-alice",
-            "type": "text"
+      "name": "Pix Key Operations",
+      "item": [
+        {
+          "name": "Query Pix Key",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer token-alice",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"pixKey\": \"chave@exemplo.com\" }"
+            },
+            "url": {
+              "raw": "http://localhost:3000/query-pix-key",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["query-pix-key"]
+            }
           },
-          { "key": "Content-Type", "value": "application/json", "type": "text" }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{ \"pixKey\": \"chave@exemplo.com\" }"
+          "response": []
         },
-        "url": {
-          "raw": "http://localhost:3000/query-pix-key",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
-          "path": ["query-pix-key"]
+        {
+          "name": "Pix Transaction",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer token-alice",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"pixKey\": \"chave@exemplo.com\", \"amount\": 100 }"
+            },
+            "url": {
+              "raw": "http://localhost:3000/pix-transaction",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["pix-transaction"]
+            }
+          },
+          "response": []
         }
-      },
-      "response": []
+      ]
     }
   ]
 }
