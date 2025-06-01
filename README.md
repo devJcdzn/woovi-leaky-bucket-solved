@@ -44,7 +44,7 @@ To complete the bonus features, we need to:
 
 1. Add GraphQL support:
 
-   - Install or GraphQL.js
+   - Install GraphQL.js
    - Define GraphQL schema for Pix transactions
    - Implement resolvers for the schema
 
